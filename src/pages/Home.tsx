@@ -12,6 +12,7 @@ import { Button } from "@mui/material";
 import TaskItem from "../components/TaskItem";
 import { useState } from "react";
 import PopupMenu from "../components/PopupMenu";
+import CircleIcon from '@mui/icons-material/Circle';
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -49,12 +50,20 @@ const Home = () => {
       <PopupMenu
         anchorEl={anchorEl}
         setAnchorEl={setAnchorEl}
-        menuItems={['نظرات']}
+        menuItems={
+          [
+            { title: 'اولویت خیلی کم', icon: <CircleIcon className="text-red-500" /> },
+            { title: 'اولویت کم', icon: <CircleIcon className="text-orange" /> },
+            { title: 'اولویت متوسط', icon: <CircleIcon className="text-amber-500" /> },
+            { title: 'اولویت بالا', icon: <CircleIcon className="text-lime-500" /> },
+            { title: 'اولویت خیلی بالا', icon: <CircleIcon className="text-green-500" /> },
+          ]
+        }
         onClickMore={(item) => handleCloseMenu(item)}
       />
 
       <div className="flex-1 h-full flex flex-col items-center justify-start bg-slate-200">
-        <h1 className="text-5xl font-bold px-8 py-4">
+        <h1 className="text-5xl font-bold px-8 py-4 animated rubberBand">
           مدیریت کارها
         </h1>
 
@@ -117,7 +126,7 @@ const Home = () => {
         <Image
           url={icon}
           alt="Icon"
-          className="size-[200px] rounded-full border-2 border-purple-500 border-solid"
+          className="animated tada size-[200px] rounded-full border-2 border-purple-500 border-solid"
         />
         <div className="w-full flex-1 flex items-center justify-center flex-col gap-8">
           <div className="w-full flex flex-row items-center justify-end gap-4 cursor-pointer hover:bg-purple-200 rounded-2xl px-4 py-2 group transition-all duration-150">
