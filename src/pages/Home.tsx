@@ -13,11 +13,15 @@ import TaskItem from "../components/TaskItem";
 import { useState } from "react";
 import PopupMenu from "../components/PopupMenu";
 import CircleIcon from '@mui/icons-material/Circle';
+import DeleteModal from "../components/DeleteModal";
+import AddTaskModal from "../components/AddTaskModal";
 
 const Home = () => {
   const dispatch = useDispatch();
 
   const [checked, setChecked] = useState<boolean>(false)
+  const [openDeleteModal, setOpenDeleteModal] = useState(false)
+  const [openAddTaskModal, setOpenAddTaskModal] = useState(false)
 
   // dispatch(snackBarSlice.actions.setSnackBar({
   //   isOpen: true,
@@ -38,11 +42,25 @@ const Home = () => {
   };
 
   const handleClickDeleteAll = () => {
+    setOpenDeleteModal(true)
+  }
 
+  const handleDeleteAll = () => {
+    setOpenDeleteModal(false)
+    //delete all task from db
   }
 
   const handleClickAddTask = () => {
+    setOpenAddTaskModal(true)
+  }
 
+  const handleAddTask = () => {
+    setOpenAddTaskModal(false)
+    //save to db
+  }
+
+  const handleClickTasks = () => {
+    //call db to refresh list
   }
 
   return (
@@ -56,10 +74,27 @@ const Home = () => {
             { title: 'اولویت کم', icon: <CircleIcon className="text-orange" /> },
             { title: 'اولویت متوسط', icon: <CircleIcon className="text-amber-500" /> },
             { title: 'اولویت بالا', icon: <CircleIcon className="text-lime-500" /> },
-            { title: 'اولویت خیلی بالا', icon: <CircleIcon className="text-green-500" /> },
+            { title: 'اولویت خیلی بالا', icon: <CircleIcon className="text-teal-500" /> },
+            { title: 'همه', icon: <CircleIcon className="text-green-500" /> },
           ]
         }
         onClickMore={(item) => handleCloseMenu(item)}
+      />
+
+      <DeleteModal
+        title="هشدار"
+        description="آیا از حذف تمام کارها اطمینان دارید؟"
+        open={openDeleteModal}
+        setOpen={setOpenDeleteModal}
+        yesBtnOnClick={handleDeleteAll}
+      />
+
+      <AddTaskModal
+        title="افزودن کار جدید"
+        description="آیا از حذف تمام کارها اطمینان دارید؟"
+        open={openAddTaskModal}
+        setOpen={setOpenAddTaskModal}
+        submitBtnOnClick={handleAddTask}
       />
 
       <div className="flex-1 h-full flex flex-col items-center justify-start bg-slate-200">
@@ -129,7 +164,10 @@ const Home = () => {
           className="animated tada size-[200px] rounded-full border-2 border-purple-500 border-solid"
         />
         <div className="w-full flex-1 flex items-center justify-center flex-col gap-8">
-          <div className="w-full flex flex-row items-center justify-end gap-4 cursor-pointer hover:bg-purple-200 rounded-2xl px-4 py-2 group transition-all duration-150">
+          <div
+            className="w-full flex flex-row items-center justify-end gap-4 cursor-pointer hover:bg-purple-200 rounded-2xl px-4 py-2 group transition-all duration-150"
+            onClick={handleClickTasks}
+          >
             <h3 className="text-2xl group-hover:text-purple-500">کارها</h3>
             <TaskAltIcon className="group-hover:text-purple-500" />
           </div>
