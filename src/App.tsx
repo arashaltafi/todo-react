@@ -62,13 +62,9 @@ function App() {
   }, [])
 
   return (
-    <div className='flex items-center justify-center flex-col select-none'>
+    <div className='w-full h-full flex items-center justify-center flex-col select-none ios-padding'>
       {
-        is404 ? <NotFound /> :
-          <div
-            className={`flex items-center justify-center w-full mx-auto overflow-x-hidden ios-padding`}>
-            <MyRoute />
-          </div>
+        is404 ? <NotFound /> : <MyRoute />
       }
     </div>
   )
