@@ -38,6 +38,10 @@
     @apply bg-slate-200 dark:bg-slate-900 text-slate-900 dark:text-slate-100;
   }
 
+  div {
+    font-family: "vazir-normal", "vazir-medium", Cambria, Cochin, Georgia, Times, serif, sans-serif, monospace !important;
+  }
+
   ::-webkit-scrollbar {
     @apply hidden;
   }

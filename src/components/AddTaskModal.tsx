@@ -1,6 +1,7 @@
-import { Box, Fade, FormControl, Modal, TextField } from '@mui/material'
+import { Box, Fade, FormControl, Modal, TextField, Tooltip } from '@mui/material'
 import Backdrop from '@mui/material/Backdrop';
 import { Dispatch, SetStateAction, useState } from 'react';
+import CircleIcon from '@mui/icons-material/Circle';
 
 interface AddTaskModalProps {
     open: boolean,
@@ -13,6 +14,7 @@ interface AddTaskModalProps {
 const AddTaskModal = (props: AddTaskModalProps) => {
     const [title, setTitle] = useState<string>('');
     const [description, setDescription] = useState<string>('');
+    const [category, setCategory] = useState<string>('');
 
     const handleCancel = () => {
         setTitle('')
@@ -188,7 +190,49 @@ const AddTaskModal = (props: AddTaskModalProps) => {
                                 />
                             </FormControl>
                         </div>
-                        <div className='flex flex-row items-center justify-center mt-8'>
+                        <div className='flex flex-row items-center justify-center mt-6 gap-3'>
+                            <Tooltip TransitionComponent={Fade} title='اولویت خیلی کم' placement="top">
+                                <div onClick={() => setCategory('اولویت خیلی کم')}>
+                                    <CircleIcon
+                                        className={`text-red-500 cursor-pointer p-0.5 rounded-full border-purple-500 border-solid ${category === 'اولویت خیلی کم' ? 'border' : 'border-0'}`}
+                                        sx={{ width: 40, height: 40 }}
+                                    />
+                                </div>
+                            </Tooltip>
+                            <Tooltip TransitionComponent={Fade} title='اولویت کم' placement="top">
+                                <div onClick={() => setCategory('اولویت کم')}>
+                                    <CircleIcon
+                                        className={`text-orange cursor-pointer p-0.5 rounded-full border-purple-500 border-solid ${category === 'اولویت کم' ? 'border' : 'border-0'}`}
+                                        sx={{ width: 40, height: 40 }}
+                                    />
+                                </div>
+                            </Tooltip>
+                            <Tooltip TransitionComponent={Fade} title='اولویت متوسط' placement="top">
+                                <div onClick={() => setCategory('اولویت متوسط')}>
+                                    <CircleIcon
+                                        className={`text-amber-500 cursor-pointer p-0.5 rounded-full border-purple-500 border-solid ${category === 'اولویت متوسط' ? 'border' : 'border-0'}`}
+                                        sx={{ width: 40, height: 40 }}
+                                    />
+                                </div>
+                            </Tooltip>
+                            <Tooltip TransitionComponent={Fade} title='اولویت بالا' placement="top">
+                                <div onClick={() => setCategory('اولویت بالا')}>
+                                    <CircleIcon
+                                        className={`text-lime-500 cursor-pointer p-0.5 rounded-full border-purple-500 border-solid ${category === 'اولویت بالا' ? 'border' : 'border-0'}`}
+                                        sx={{ width: 40, height: 40 }}
+                                    />
+                                </div>
+                            </Tooltip>
+                            <Tooltip TransitionComponent={Fade} title='اولویت خیلی بالا' placement="top">
+                                <div onClick={() => setCategory('اولویت خیلی بالا')}>
+                                    <CircleIcon
+                                        className={`text-green-500 cursor-pointer p-0.5 rounded-full border-purple-500 border-solid ${category === 'اولویت خیلی بالا' ? 'border' : 'border-0'}`}
+                                        sx={{ width: 40, height: 40 }}
+                                    />
+                                </div>
+                            </Tooltip>
+                        </div>
+                        <div className='flex flex-row items-center justify-center mt-12'>
                             <button className='w-full mx-2 btn-primary text-slate-100 px-2 sm:px-3 md:px-4 py-2 sm:py-2.5 md:py-3 rounded-md sm:rounded-lg md:rounded-xl hover:no-underline' onClick={handleSubmit}>ثبت</button>
                             <button className='w-full mx-2 btn-error text-slate-100 px-2 sm:px-3 md:px-4 py-2 sm:py-2.5 md:py-3 rounded-md sm:rounded-lg md:rounded-xl hover:no-underline' onClick={handleCancel}>انصراف</button>
                         </div>
