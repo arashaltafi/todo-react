@@ -54,9 +54,12 @@ const Home = () => {
     setOpenAddTaskModal(true)
   }
 
-  const handleAddTask = () => {
+  const handleAddTask = (title: string, description: string, category: string) => {
     setOpenAddTaskModal(false)
     //save to db
+    console.log('title', title)
+    console.log('description', description)
+    console.log('category', category)
   }
 
   const handleClickTasks = () => {
@@ -94,7 +97,7 @@ const Home = () => {
         description="آیا از حذف تمام کارها اطمینان دارید؟"
         open={openAddTaskModal}
         setOpen={setOpenAddTaskModal}
-        submitBtnOnClick={handleAddTask}
+        submitBtnOnClick={(title, description, category) => handleAddTask(title, description, category)}
       />
 
       <div className="flex-1 h-full flex flex-col items-center justify-start bg-slate-200">

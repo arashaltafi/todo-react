@@ -8,7 +8,7 @@ interface AddTaskModalProps {
     title: string,
     description: string,
     setOpen: Dispatch<SetStateAction<boolean>>,
-    submitBtnOnClick?: () => void
+    submitBtnOnClick?: (title: string, description: string, category: string) => void
 }
 
 const AddTaskModal = (props: AddTaskModalProps) => {
@@ -25,7 +25,7 @@ const AddTaskModal = (props: AddTaskModalProps) => {
     const handleSubmit = () => {
         setTitle('')
         setDescription('')
-        props.submitBtnOnClick && props.submitBtnOnClick()
+        props.submitBtnOnClick && props.submitBtnOnClick(title, description, category)
     }
 
     return (
