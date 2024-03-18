@@ -38,7 +38,7 @@ const BottomSheet = (props: BottomSheetProps) => {
                 props.children
                     ? props.children
                     :
-                    <div className='pt-4 pb-8 w-full flex flex-col items-center justify-center bg-slate-300 dark:bg-slate-700'>
+                    <div className='pt-4 pb-8 w-full flex flex-col items-center justify-center bg-slate-300 dark:bg-slate-700 select-none'>
                         {props.icon && props.icon}
                         <h2 className='mt-5 sm:mt-6 md:mt-8 text-sm sm:text-lg md:text-xl lg:text-2xl text-black dark:text-white'>{props.title}</h2>
                         <div className='py-4 mt-3 sm:mt-4 md:mt-6 lg:mt-8 flex w-full items-center justify-center gap-4 text-center overflow-hidden'>

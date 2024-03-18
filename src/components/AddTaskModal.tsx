@@ -49,7 +49,7 @@ const AddTaskModal = (props: AddTaskModalProps) => {
                     timeout: 500,
                 },
             }}
-            className='bg-slate-500/50'
+            className='bg-slate-500/50 select-none'
         >
             <Fade in={props.open}>
                 <Box
