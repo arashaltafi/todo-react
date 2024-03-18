@@ -13,7 +13,7 @@ import AddTaskModal from "../components/AddTaskModal";
 import { openDB } from 'idb';
 import BottomSheet from "../components/BottomSheet";
 import Exit from '../assets/images/block_install.png'
-import { Fade, Bounce, Flip, Hinge, JackInTheBox, Roll, Rotate, Slide, Zoom } from "react-awesome-reveal";
+import { Fade, JackInTheBox } from "react-awesome-reveal";
 const icon = "/assets/favicon.png"
 
 type TaskType = {
