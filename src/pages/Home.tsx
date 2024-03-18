@@ -1,13 +1,8 @@
-import { useDispatch } from "react-redux";
-import snackBarSlice from "../redux/snackBarSlice"
 import Image from "../components/Image";
-const icon = "/assets/favicon.png"
 import DeleteIcon from '@mui/icons-material/Delete';
 import CategoryIcon from '@mui/icons-material/Category';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import AddTaskIcon from '@mui/icons-material/AddTask';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { Button } from "@mui/material";
 import TaskItem from "../components/TaskItem";
 import { useEffect, useState } from "react";
@@ -18,6 +13,7 @@ import AddTaskModal from "../components/AddTaskModal";
 import { openDB } from 'idb';
 import BottomSheet from "../components/BottomSheet";
 import Exit from '../assets/images/block_install.png'
+const icon = "/assets/favicon.png"
 
 type TaskType = {
   id: number,
@@ -34,9 +30,8 @@ enum StateSort {
 }
 
 const Home = () => {
-  const dispatch = useDispatch();
-
   const [stateSortItem, setStateSortItem] = useState<StateSort>(StateSort.All);
+  const [categorySelected, setCategorySelected] = useState<string>('');
 
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openAddTaskModal, setOpenAddTaskModal] = useState(false);
@@ -67,12 +62,6 @@ const Home = () => {
     openDatabase();
   }, []);
 
-  // dispatch(snackBarSlice.actions.setSnackBar({
-  //   isOpen: true,
-  //   message: 'لطفا کد تایید را صحیح وارد نمایید.',
-  //   type: 'error',
-  // }))
-
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleClickCategory = (event: React.MouseEvent<HTMLElement>) => {
@@ -80,10 +69,42 @@ const Home = () => {
   };
 
   const handleCloseMenu = (item: string) => {
-    if (item == 'نظرات') {
-      console.log('test 1')
+    setCategorySelected(item)
+  }
+
+  useEffect(() => {
+    if (categorySelected == '') return
+
+    const getAllByCategory = async () => {
+      const db = await openDB('todo', 1);
+      const initialTasks = await db.getAll('tasks');
+
+      let state = '';
+      if (stateSortItem == StateSort.Done) {
+        state = 'Done';
+      } else if (stateSortItem == StateSort.NotDone) {
+        state = 'NotDone';
+      } else {
+        state = 'All'
+      }
+
+      setTasks(
+        initialTasks.filter((task) => {
+          if (categorySelected == 'همه' && state != 'All') {
+            return task.isDone == (state == 'Done' ? true : false)
+          } else if (state == 'All' && categorySelected != 'همه') {
+            return task.category == categorySelected
+          } else if (state != 'All' && categorySelected != 'همه') {
+            return task.category == categorySelected && task.isDone == (state == 'Done' ? true : false)
+          } else {
+            return initialTasks
+          }
+        })
+      )
     }
-  };
+
+    getAllByCategory()
+  }, [categorySelected])
 
   const handleClickDeleteAll = () => {
     setOpenDeleteModal(true)
@@ -160,14 +181,31 @@ const Home = () => {
 
     const db = await openDB('todo', 1);
     const initialTasks = await db.getAll('tasks');
-    
+
+    let stateSort = '';
     if (state == StateSort.Done) {
-      setTasks(initialTasks.filter((task) => task.isDone == true));
+      stateSort = 'Done';
     } else if (state == StateSort.NotDone) {
-      setTasks(initialTasks.filter((task) => task.isDone == false));
+      stateSort = 'NotDone';
     } else {
-      setTasks(initialTasks);
+      stateSort = 'All'
     }
+
+    const categoryState = categorySelected == '' ? 'همه' : categorySelected
+
+    setTasks(
+      initialTasks.filter((task) => {
+        if (categoryState == 'همه' && stateSort != 'All') {
+          return task.isDone == (stateSort == 'Done' ? true : false)
+        } else if (stateSort == 'All' && categoryState != 'همه') {
+          return task.category == categoryState
+        } else if (stateSort != 'All' && categoryState != 'همه') {
+          return task.category == categoryState && task.isDone == (stateSort == 'Done' ? true : false)
+        } else {
+          return initialTasks
+        }
+      })
+    )
   }
 
   return (
