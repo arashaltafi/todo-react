@@ -215,12 +215,12 @@ const Home = () => {
         setAnchorEl={setAnchorEl}
         menuItems={
           [
-            { title: 'اولویت خیلی کم', icon: <CircleIcon className="text-red-500" /> },
-            { title: 'اولویت کم', icon: <CircleIcon className="text-orange" /> },
-            { title: 'اولویت متوسط', icon: <CircleIcon className="text-amber-500" /> },
-            { title: 'اولویت بالا', icon: <CircleIcon className="text-lime-500" /> },
-            { title: 'اولویت خیلی بالا', icon: <CircleIcon className="text-teal-500" /> },
-            { title: 'همه', icon: <CircleIcon className="text-green-500" /> },
+            { title: 'اولویت خیلی کم', icon: <CircleIcon className={`text-red-500 p-0.5 rounded-full border-purple-500 border-solid ${categorySelected === 'اولویت خیلی کم' ? 'border' : 'border-0'}`} /> },
+            { title: 'اولویت کم', icon: <CircleIcon className={`text-orange p-0.5 rounded-full border-purple-500 border-solid ${categorySelected === 'اولویت کم' ? 'border' : 'border-0'}`} /> },
+            { title: 'اولویت متوسط', icon: <CircleIcon className={`text-amber-500 p-0.5 rounded-full border-purple-500 border-solid ${categorySelected === 'اولویت متوسط' ? 'border' : 'border-0'}`} /> },
+            { title: 'اولویت بالا', icon: <CircleIcon className={`text-lime-500 p-0.5 rounded-full border-purple-500 border-solid ${categorySelected === 'اولویت بالا' ? 'border' : 'border-0'}`} /> },
+            { title: 'اولویت خیلی بالا', icon: <CircleIcon className={`text-teal-500 p-0.5 rounded-full border-purple-500 border-solid ${categorySelected === 'اولویت خیلی بالا' ? 'border' : 'border-0'}`} /> },
+            { title: 'همه', icon: <CircleIcon className={`text-green-500 p-0.5 rounded-full border-purple-500 border-solid ${categorySelected === 'همه' ? 'border' : 'border-0'}`} /> },
           ]
         }
         onClickMore={(item) => handleCloseMenu(item)}

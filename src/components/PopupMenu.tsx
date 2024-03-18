@@ -30,7 +30,7 @@ const PopupMenu = (props: PopupMenuProps) => {
             }}
             anchorEl={props.anchorEl}
             open={open}
-            onClose={handleCloseMenu}
+            onClose={() => props.setAnchorEl(null)}
             TransitionComponent={Fade}
             sx={{
                 '.MuiMenuItem-root': {
