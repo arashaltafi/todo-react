@@ -27,8 +27,8 @@ const TaskItem = (props: TaskItemProps) => {
             </div>
 
             <div className="flex-1 flex flex-col items-start justify-center gap-2 mr-4">
-                <h2 className="text-xl font-bold">{props.title}</h2>
-                <p className="text-md text-justify line-clamp-2">{props.description}</p>
+                <h2 className="text-xl font-bold line-clamp-1 break-all">{props.title}</h2>
+                <p className="text-md text-justify line-clamp-2 break-all">{props.description}</p>
                 <div className='w-full flex flex-row items-center justify-end mt-8 gap-2'>
                     {
                         <CircleIcon className={`${props.category === 'اولویت خیلی کم' ? 'text-red-500' :

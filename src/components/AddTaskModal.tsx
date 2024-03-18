@@ -2,6 +2,8 @@ import { Box, Fade, FormControl, Modal, TextField, Tooltip } from '@mui/material
 import Backdrop from '@mui/material/Backdrop';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import CircleIcon from '@mui/icons-material/Circle';
+import { useDispatch } from 'react-redux';
+import snackBarSlice from '../redux/snackBarSlice';
 
 interface AddTaskModalProps {
     open: boolean,
@@ -21,6 +23,8 @@ const AddTaskModal = (props: AddTaskModalProps) => {
     const [description, setDescription] = useState<string>('');
     const [category, setCategory] = useState<string>('');
 
+    const dispatch = useDispatch();
+
     useEffect(() => {
         setId(props.id)
         setTitle(props.title)
@@ -36,10 +40,31 @@ const AddTaskModal = (props: AddTaskModalProps) => {
     }
 
     const handleSubmit = () => {
-        setId(0)
-        setTitle('')
-        setDescription('')
-        props.submitBtnOnClick && props.submitBtnOnClick(id, title, description, category, props.isDone)
+        if (title === '') {
+            dispatch(snackBarSlice.actions.setSnackBar({
+                isOpen: true,
+                message: 'لطفا عنوان را تکمیل کنید',
+                type: 'error'
+            }))
+        } else if (description === '') {
+            dispatch(snackBarSlice.actions.setSnackBar({
+                isOpen: true,
+                message: 'لطفا توضیحات را تکمیل کنید',
+                type: 'error'
+            }))
+        } else if (category === '') {
+            dispatch(snackBarSlice.actions.setSnackBar({
+                isOpen: true,
+                message: 'لطفا دسته بندی را انتخاب کنید',
+                type: 'error'
+            }))
+        } else {
+            setId(0)
+            setTitle('')
+            setDescription('')
+            setCategory('')
+            props.submitBtnOnClick && props.submitBtnOnClick(id, title, description, category, props.isDone)
+        }
     }
 
     return (
