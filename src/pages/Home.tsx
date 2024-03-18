@@ -16,6 +16,8 @@ import CircleIcon from '@mui/icons-material/Circle';
 import DeleteModal from "../components/DeleteModal";
 import AddTaskModal from "../components/AddTaskModal";
 import { openDB } from 'idb';
+import BottomSheet from "../components/BottomSheet";
+import Exit from '../assets/images/block_install.png'
 
 type TaskType = {
   id: number,
@@ -30,6 +32,14 @@ const Home = () => {
 
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const [openAddTaskModal, setOpenAddTaskModal] = useState(false)
+  const [openBottomSheetDelete, setOpenBottomSheetDelete] = useState(false);
+
+  const [deleteItemId, setDeleteItemId] = useState<number>(0);
+  const [itemTitleModal, setItemTitleModal] = useState<string>('');
+  const [editItemTitle, setEditItemTitle] = useState<string>('');
+  const [editItemDescription, setEditItemDescription] = useState<string>('');
+  const [editItemCategory, setEditItemCategory] = useState<string>('');
+
   const [tasks, setTasks] = useState<TaskType[]>([]);
 
   useEffect(() => {
@@ -69,17 +79,26 @@ const Home = () => {
     setOpenDeleteModal(true)
   }
 
-  const handleDeleteAll = () => {
+  const handleDeleteAll = async () => {
     setOpenDeleteModal(false)
-    //delete all task from db
+    const db = await openDB('todo', 1);
+    db.clear('tasks');
+    setTasks([]);
   }
 
   const handleClickAddTask = () => {
+    setItemTitleModal('افزودن کار جدید')
+    setEditItemTitle('')
+    setEditItemDescription('')
+    setEditItemCategory('')
     setOpenAddTaskModal(true)
   }
 
   const handleAddTask = async (title: string, description: string, category: string) => {
     setOpenAddTaskModal(false)
+    setEditItemTitle('')
+    setEditItemDescription('')
+    setEditItemCategory('')
 
     const db = await openDB('todo', 1);
     const newTaskObj: TaskType = {
@@ -141,11 +160,35 @@ const Home = () => {
       />
 
       <AddTaskModal
-        title="افزودن کار جدید"
-        description="آیا از حذف تمام کارها اطمینان دارید؟"
+        titleModal={itemTitleModal}
+        title={editItemTitle}
+        description={editItemDescription}
+        category={editItemCategory}
         open={openAddTaskModal}
         setOpen={setOpenAddTaskModal}
         submitBtnOnClick={(title, description, category) => handleAddTask(title, description, category)}
+      />
+
+      <BottomSheet
+        id={deleteItemId}
+        icon={<Image url={Exit} alt='logout-icon' className='size-[50px] sm:size-[70px] md:size-[90px] lg:size-[110px]' />}
+        title='آیا از حذف این کار اطمینان دارید؟'
+        open={openBottomSheetDelete}
+        setOpen={setOpenBottomSheetDelete}
+        yesBtnText='بله'
+        yesBtnOnClick={async (id) => {
+          setOpenBottomSheetDelete(false)
+          setDeleteItemId(0);
+          const db = await openDB('todo', 1);
+          await db.delete('tasks', id);
+          const updatedTasks = tasks.filter((task) => task.id !== id);
+          setTasks(updatedTasks);
+        }}
+        noBtnText='خیر'
+        noBtnOnClick={() =>
+          setOpenBottomSheetDelete(false)
+        }
+        canDismiss={true}
       />
 
       <div className="flex-1 h-full flex flex-col items-center justify-start bg-slate-200">
@@ -201,8 +244,17 @@ const Home = () => {
                     category={item.category}
                     checked={item.isDone}
                     setChecked={(isChecked) => handleUpdateCheckedTask(isChecked, item)}
-                    onDeleteClick={handleClickDeleteAll}
-                    onEditClick={handleClickAddTask}
+                    onDeleteClick={() => {
+                      setDeleteItemId(item.id)
+                      setOpenBottomSheetDelete(true)
+                    }}
+                    onEditClick={() => {
+                      setItemTitleModal('بروزرسانی کار مورد نظر')
+                      setEditItemTitle(item.title)
+                      setEditItemDescription(item.description)
+                      setEditItemCategory(item.category)
+                      setOpenAddTaskModal(true)
+                    }}
                   />
                 )
               })

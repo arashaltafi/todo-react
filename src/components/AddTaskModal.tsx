@@ -1,12 +1,14 @@
 import { Box, Fade, FormControl, Modal, TextField, Tooltip } from '@mui/material'
 import Backdrop from '@mui/material/Backdrop';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import CircleIcon from '@mui/icons-material/Circle';
 
 interface AddTaskModalProps {
     open: boolean,
+    titleModal: string,
     title: string,
     description: string,
+    category: string,
     setOpen: Dispatch<SetStateAction<boolean>>,
     submitBtnOnClick?: (title: string, description: string, category: string) => void
 }
@@ -15,6 +17,12 @@ const AddTaskModal = (props: AddTaskModalProps) => {
     const [title, setTitle] = useState<string>('');
     const [description, setDescription] = useState<string>('');
     const [category, setCategory] = useState<string>('');
+
+    useEffect(() => {
+        setTitle(props.title)
+        setDescription(props.description)
+        setCategory(props.category)
+    }, [props.open])
 
     const handleCancel = () => {
         setTitle('')
@@ -49,7 +57,7 @@ const AddTaskModal = (props: AddTaskModalProps) => {
                     className='bg-slate-700 text-white px-8 py-4 w-[90%] md:w-[70%] lg:w-[50%] xl:w-[30%] m-auto rounded-xl absolute left-1/2 top-1/2 border border-solid border-black shadow-xl shadow-slate-900 dark:shadow-slate-100 -translate-x-1/2 -translate-y-1/2'
                 >
                     <div id='transition-modal-title'>
-                        <h2 className='text-3xl font-bold pt-2'>{props.title}</h2>
+                        <h2 className='text-3xl font-bold pt-2'>{props.titleModal}</h2>
                     </div>
                     <div id='transition-modal-description' className='mt-6'>
                         <div className='w-[90%] mx-auto flex items-center justify-center mt-8'>
