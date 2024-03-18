@@ -27,11 +27,19 @@ type TaskType = {
   isDone: boolean,
 }
 
+enum StateSort {
+  All,
+  Done,
+  NotDone
+}
+
 const Home = () => {
   const dispatch = useDispatch();
 
-  const [openDeleteModal, setOpenDeleteModal] = useState(false)
-  const [openAddTaskModal, setOpenAddTaskModal] = useState(false)
+  const [stateSortItem, setStateSortItem] = useState<StateSort>(StateSort.All);
+
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openAddTaskModal, setOpenAddTaskModal] = useState(false);
   const [openBottomSheetDelete, setOpenBottomSheetDelete] = useState(false);
 
   const [deleteItemId, setDeleteItemId] = useState<number>(0);
@@ -132,12 +140,7 @@ const Home = () => {
   }
 
   const handleClickTasks = async () => {
-    const db = await openDB('todo', 1, {
-      upgrade(db) {
-        db.createObjectStore('tasks', { keyPath: 'id', autoIncrement: true });
-      },
-    });
-
+    const db = await openDB('todo');
     const initialTasks = await db.getAll('tasks');
     setTasks(initialTasks);
   }
@@ -150,6 +153,21 @@ const Home = () => {
       task.id === editingTodo.id ? updatedTask : task
     );
     setTasks(updatedTasks);
+  }
+
+  const handleItemSort = async (state: StateSort) => {
+    setStateSortItem(state)
+
+    const db = await openDB('todo', 1);
+    const initialTasks = await db.getAll('tasks');
+    
+    if (state == StateSort.Done) {
+      setTasks(initialTasks.filter((task) => task.isDone == true));
+    } else if (state == StateSort.NotDone) {
+      setTasks(initialTasks.filter((task) => task.isDone == false));
+    } else {
+      setTasks(initialTasks);
+    }
   }
 
   return (
@@ -227,26 +245,29 @@ const Home = () => {
         <div className="w-full flex flex-row items-center justify-between mt-16 px-8 py-4">
           <div className="flex flex-row gap-4 items-center justify-center">
             <Button
-              variant="outlined"
+              variant={`${stateSortItem == StateSort.NotDone ? 'contained' : 'outlined'}`}
               sx={{
                 fontFamily: 'vazir-medium'
               }}
+              onClick={() => handleItemSort(StateSort.NotDone)}
             >
               انجام نشده
             </Button>
             <Button
-              variant="outlined"
+              variant={`${stateSortItem == StateSort.Done ? 'contained' : 'outlined'}`}
               sx={{
                 fontFamily: 'vazir-medium'
               }}
+              onClick={() => handleItemSort(StateSort.Done)}
             >
               انجام شده
             </Button>
             <Button
-              variant="contained"
+              variant={`${stateSortItem == StateSort.All ? 'contained' : 'outlined'}`}
               sx={{
                 fontFamily: 'vazir-medium'
               }}
+              onClick={() => handleItemSort(StateSort.All)}
             >
               همه
             </Button>
