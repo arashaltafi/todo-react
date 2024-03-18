@@ -13,6 +13,7 @@ import AddTaskModal from "../components/AddTaskModal";
 import { openDB } from 'idb';
 import BottomSheet from "../components/BottomSheet";
 import Exit from '../assets/images/block_install.png'
+import { Fade, Bounce, Flip, Hinge, JackInTheBox, Roll, Rotate, Slide, Zoom } from "react-awesome-reveal";
 const icon = "/assets/favicon.png"
 
 type TaskType = {
@@ -282,33 +283,35 @@ const Home = () => {
         {/* Filters */}
         <div className="w-full flex flex-row items-center justify-between mt-16 px-8 py-4">
           <div className="flex flex-row gap-4 items-center justify-center">
-            <Button
-              variant={`${stateSortItem == StateSort.NotDone ? 'contained' : 'outlined'}`}
-              sx={{
-                fontFamily: 'vazir-medium'
-              }}
-              onClick={() => handleItemSort(StateSort.NotDone)}
-            >
-              انجام نشده
-            </Button>
-            <Button
-              variant={`${stateSortItem == StateSort.Done ? 'contained' : 'outlined'}`}
-              sx={{
-                fontFamily: 'vazir-medium'
-              }}
-              onClick={() => handleItemSort(StateSort.Done)}
-            >
-              انجام شده
-            </Button>
-            <Button
-              variant={`${stateSortItem == StateSort.All ? 'contained' : 'outlined'}`}
-              sx={{
-                fontFamily: 'vazir-medium'
-              }}
-              onClick={() => handleItemSort(StateSort.All)}
-            >
-              همه
-            </Button>
+            <Fade triggerOnce={true} cascade>
+              <Button
+                variant={`${stateSortItem == StateSort.NotDone ? 'contained' : 'outlined'}`}
+                sx={{
+                  fontFamily: 'vazir-medium'
+                }}
+                onClick={() => handleItemSort(StateSort.NotDone)}
+              >
+                انجام نشده
+              </Button>
+              <Button
+                variant={`${stateSortItem == StateSort.Done ? 'contained' : 'outlined'}`}
+                sx={{
+                  fontFamily: 'vazir-medium'
+                }}
+                onClick={() => handleItemSort(StateSort.Done)}
+              >
+                انجام شده
+              </Button>
+              <Button
+                variant={`${stateSortItem == StateSort.All ? 'contained' : 'outlined'}`}
+                sx={{
+                  fontFamily: 'vazir-medium'
+                }}
+                onClick={() => handleItemSort(StateSort.All)}
+              >
+                همه
+              </Button>
+            </Fade>
           </div>
           <h2 className="text-4xl">
             کارها
@@ -357,34 +360,36 @@ const Home = () => {
           className="animated tada size-[200px] rounded-full border-2 border-purple-500 border-solid"
         />
         <div className="w-full flex-1 flex items-center justify-center flex-col gap-8">
-          <div
-            className="w-full flex flex-row items-center justify-end gap-4 cursor-pointer hover:bg-purple-200 rounded-2xl px-4 py-2 group transition-all duration-150"
-            onClick={handleClickTasks}
-          >
-            <h3 className="text-2xl group-hover:text-purple-500">کارها</h3>
-            <TaskAltIcon className="group-hover:text-purple-500" />
-          </div>
-          <div
-            className="w-full flex flex-row items-center justify-end gap-4 cursor-pointer hover:bg-purple-200 rounded-2xl px-4 py-2 group transition-all duration-150"
-            onClick={handleClickAddTask}
-          >
-            <h3 className="text-2xl group-hover:text-purple-500">افزودن کار</h3>
-            <AddTaskIcon className="group-hover:text-purple-500" />
-          </div>
-          <div
-            className="w-full flex flex-row items-center justify-end gap-4 cursor-pointer hover:bg-purple-200 rounded-2xl px-4 py-2 group transition-all duration-150"
-            onClick={handleClickCategory}
-          >
-            <h3 className="text-2xl group-hover:text-purple-500">دسته بندی ها</h3>
-            <CategoryIcon className="group-hover:text-purple-500" />
-          </div>
-          <div
-            className="w-full flex flex-row items-center justify-end gap-4 cursor-pointer hover:bg-purple-200 rounded-2xl px-4 py-2 group transition-all duration-150"
-            onClick={handleClickDeleteAll}
-          >
-            <h3 className="text-2xl group-hover:text-purple-500">پاک کردن همه</h3>
-            <DeleteIcon className="group-hover:text-purple-500" />
-          </div>
+          <JackInTheBox triggerOnce={true} cascade>
+            <div
+              className="w-full flex flex-row items-center justify-end gap-4 cursor-pointer hover:bg-purple-200 rounded-2xl px-4 py-2 group transition-all duration-150"
+              onClick={handleClickTasks}
+            >
+              <h3 className="text-2xl group-hover:text-purple-500">کارها</h3>
+              <TaskAltIcon className="group-hover:text-purple-500" />
+            </div>
+            <div
+              className="w-full flex flex-row items-center justify-end gap-4 cursor-pointer hover:bg-purple-200 rounded-2xl px-4 py-2 group transition-all duration-150"
+              onClick={handleClickAddTask}
+            >
+              <h3 className="text-2xl group-hover:text-purple-500">افزودن کار</h3>
+              <AddTaskIcon className="group-hover:text-purple-500" />
+            </div>
+            <div
+              className="w-full flex flex-row items-center justify-end gap-4 cursor-pointer hover:bg-purple-200 rounded-2xl px-4 py-2 group transition-all duration-150"
+              onClick={handleClickCategory}
+            >
+              <h3 className="text-2xl group-hover:text-purple-500">دسته بندی ها</h3>
+              <CategoryIcon className="group-hover:text-purple-500" />
+            </div>
+            <div
+              className="w-full flex flex-row items-center justify-end gap-4 cursor-pointer hover:bg-purple-200 rounded-2xl px-4 py-2 group transition-all duration-150"
+              onClick={handleClickDeleteAll}
+            >
+              <h3 className="text-2xl group-hover:text-purple-500">پاک کردن همه</h3>
+              <DeleteIcon className="group-hover:text-purple-500" />
+            </div>
+          </JackInTheBox>
         </div>
       </div>
     </div>

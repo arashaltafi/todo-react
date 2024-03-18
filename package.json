@@ -27,6 +27,7 @@
     "lottie-react": "^2.4.0",
     "postcss-nesting": "^12.1.0",
     "react": "^18.2.0",
+    "react-awesome-reveal": "^4.2.8",
     "react-cookie": "^7.1.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^14.1.0",
