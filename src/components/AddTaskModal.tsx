@@ -6,34 +6,40 @@ import CircleIcon from '@mui/icons-material/Circle';
 interface AddTaskModalProps {
     open: boolean,
     titleModal: string,
+    id: number,
     title: string,
     description: string,
     category: string,
+    isDone: boolean,
     setOpen: Dispatch<SetStateAction<boolean>>,
-    submitBtnOnClick?: (title: string, description: string, category: string) => void
+    submitBtnOnClick?: (id: number, title: string, description: string, category: string, isDone: boolean) => void
 }
 
 const AddTaskModal = (props: AddTaskModalProps) => {
+    const [id, setId] = useState<number>(0);
     const [title, setTitle] = useState<string>('');
     const [description, setDescription] = useState<string>('');
     const [category, setCategory] = useState<string>('');
 
     useEffect(() => {
+        setId(props.id)
         setTitle(props.title)
         setDescription(props.description)
         setCategory(props.category)
     }, [props.open])
 
     const handleCancel = () => {
+        setId(0)
         setTitle('')
         setDescription('')
         props.setOpen(false)
     }
 
     const handleSubmit = () => {
+        setId(0)
         setTitle('')
         setDescription('')
-        props.submitBtnOnClick && props.submitBtnOnClick(title, description, category)
+        props.submitBtnOnClick && props.submitBtnOnClick(id, title, description, category, props.isDone)
     }
 
     return (

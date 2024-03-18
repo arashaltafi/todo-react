@@ -39,6 +39,8 @@ const Home = () => {
   const [editItemTitle, setEditItemTitle] = useState<string>('');
   const [editItemDescription, setEditItemDescription] = useState<string>('');
   const [editItemCategory, setEditItemCategory] = useState<string>('');
+  const [editItemId, setEditItemId] = useState<number>(0);
+  const [editItemIsDone, setEditItemIsDone] = useState<boolean>(false);
 
   const [tasks, setTasks] = useState<TaskType[]>([]);
 
@@ -91,14 +93,13 @@ const Home = () => {
     setEditItemTitle('')
     setEditItemDescription('')
     setEditItemCategory('')
+    setEditItemId(0)
+    setEditItemIsDone(false)
     setOpenAddTaskModal(true)
   }
 
   const handleAddTask = async (title: string, description: string, category: string) => {
     setOpenAddTaskModal(false)
-    setEditItemTitle('')
-    setEditItemDescription('')
-    setEditItemCategory('')
 
     const db = await openDB('todo', 1);
     const newTaskObj: TaskType = {
@@ -110,6 +111,24 @@ const Home = () => {
     };
     await db.add('tasks', newTaskObj);
     setTasks([...tasks, newTaskObj]);
+  }
+
+  const handleUpdateTask = async (id: number, title: string, description: string, category: string, isDone: boolean) => {
+    setOpenAddTaskModal(false)
+
+    setEditItemTitle('')
+    setEditItemDescription('')
+    setEditItemCategory('')
+    setEditItemId(0)
+    setEditItemIsDone(false)
+
+    const db = await openDB('todo', 1);
+    const updatedTask: TaskType = { id: id, title: title, description: description, category: category, isDone: isDone };
+    await db.put('tasks', updatedTask);
+    const updatedTasks = tasks.map((task) =>
+      task.id === id ? updatedTask : task
+    );
+    setTasks(updatedTasks);
   }
 
   const handleClickTasks = async () => {
@@ -160,13 +179,21 @@ const Home = () => {
       />
 
       <AddTaskModal
+        id={editItemId}
         titleModal={itemTitleModal}
         title={editItemTitle}
         description={editItemDescription}
         category={editItemCategory}
+        isDone={editItemIsDone}
         open={openAddTaskModal}
         setOpen={setOpenAddTaskModal}
-        submitBtnOnClick={(title, description, category) => handleAddTask(title, description, category)}
+        submitBtnOnClick={(id, title, description, category, isDone) => {
+          if (editItemTitle == '' || editItemDescription == '' || editItemCategory == '' || editItemId == 0) {
+            handleAddTask(title, description, category)
+          } else {
+            handleUpdateTask(id, title, description, category, isDone)
+          }
+        }}
       />
 
       <BottomSheet
@@ -253,6 +280,8 @@ const Home = () => {
                       setEditItemTitle(item.title)
                       setEditItemDescription(item.description)
                       setEditItemCategory(item.category)
+                      setEditItemId(item.id)
+                      setEditItemIsDone(item.isDone)
                       setOpenAddTaskModal(true)
                     }}
                   />
