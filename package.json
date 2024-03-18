@@ -23,6 +23,7 @@
     "dotenv": "^16.4.5",
     "framer-motion": "^11.0.14",
     "i18next": "^23.10.1",
+    "idb": "^8.0.0",
     "lottie-react": "^2.4.0",
     "postcss-nesting": "^12.1.0",
     "react": "^18.2.0",

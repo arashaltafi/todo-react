@@ -10,18 +10,42 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { Button } from "@mui/material";
 import TaskItem from "../components/TaskItem";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PopupMenu from "../components/PopupMenu";
 import CircleIcon from '@mui/icons-material/Circle';
 import DeleteModal from "../components/DeleteModal";
 import AddTaskModal from "../components/AddTaskModal";
+import { openDB } from 'idb';
+
+type TaskType = {
+  id: number,
+  title: string,
+  description: string,
+  category: string,
+  isDone: boolean,
+}
 
 const Home = () => {
   const dispatch = useDispatch();
 
-  const [checked, setChecked] = useState<boolean>(false)
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const [openAddTaskModal, setOpenAddTaskModal] = useState(false)
+  const [tasks, setTasks] = useState<TaskType[]>([]);
+
+  useEffect(() => {
+    const openDatabase = async () => {
+      const db = await openDB('todo', 1, {
+        upgrade(db) {
+          db.createObjectStore('tasks', { keyPath: 'id', autoIncrement: true });
+        },
+      });
+
+      const initialTasks = await db.getAll('tasks');
+      setTasks(initialTasks);
+    };
+
+    openDatabase();
+  }, []);
 
   // dispatch(snackBarSlice.actions.setSnackBar({
   //   isOpen: true,
@@ -54,16 +78,40 @@ const Home = () => {
     setOpenAddTaskModal(true)
   }
 
-  const handleAddTask = (title: string, description: string, category: string) => {
+  const handleAddTask = async (title: string, description: string, category: string) => {
     setOpenAddTaskModal(false)
-    //save to db
-    console.log('title', title)
-    console.log('description', description)
-    console.log('category', category)
+
+    const db = await openDB('todo', 1);
+    const newTaskObj: TaskType = {
+      id: Date.now(),
+      title: title,
+      description: description,
+      category: category,
+      isDone: false,
+    };
+    await db.add('tasks', newTaskObj);
+    setTasks([...tasks, newTaskObj]);
   }
 
-  const handleClickTasks = () => {
-    //call db to refresh list
+  const handleClickTasks = async () => {
+    const db = await openDB('todo', 1, {
+      upgrade(db) {
+        db.createObjectStore('tasks', { keyPath: 'id', autoIncrement: true });
+      },
+    });
+
+    const initialTasks = await db.getAll('tasks');
+    setTasks(initialTasks);
+  }
+
+  const handleUpdateCheckedTask = async (isChecked: boolean, editingTodo: TaskType) => {
+    const db = await openDB('todo', 1);
+    const updatedTask: TaskType = { ...editingTodo, isDone: isChecked };
+    await db.put('tasks', updatedTask);
+    const updatedTasks = tasks.map((task) =>
+      task.id === editingTodo.id ? updatedTask : task
+    );
+    setTasks(updatedTasks);
   }
 
   return (
@@ -144,15 +192,17 @@ const Home = () => {
         <div className="w-full overflow-y-auto px-8 py-4 mt-4">
           <div className="w-full flex flex-col items-center justify-center gap-6">
             {
-              [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => {
+              tasks.map((item, index) => {
                 return (
                   <TaskItem
                     key={index}
-                    title={`عنوان ${item}`}
-                    description={`لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد نیاز، و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد، کتابهای زیادی در شصت و سه درصد گذشته حال و آینده، شناخت فراوان جامعه و متخصصان را می طلبد، تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی، و فرهنگ پیشرو در زبان فارسی ایجاد کرد، در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها، و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی، و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد. ${item}`}
-                    category={`دسته بندی ${item}`}
-                    checked={checked}
-                    setChecked={setChecked}
+                    title={item.title}
+                    description={item.description}
+                    category={item.category}
+                    checked={item.isDone}
+                    setChecked={(isChecked) => handleUpdateCheckedTask(isChecked, item)}
+                    onDeleteClick={handleClickDeleteAll}
+                    onEditClick={handleClickAddTask}
                   />
                 )
               })
